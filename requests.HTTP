@@ -1,0 +1,54 @@
+### admin get orders
+GET http://localhost:9090/api/v1/orders
+
+### admin get customers
+GET http://localhost:9090/api/v1/customers
+
+### admin get all cars
+GET http://localhost:9090/api/v1/allcars
+
+POST http://localhost:9090/api/v1/addcustomer
+Content-Type: application/json
+
+{
+  "username": "Pig",
+  "name": "Miss Piggy",
+  "address": "Street ave 1",
+  "email": "Miss.Piggy@hotmail.com",
+  "phoneNumber": "911"
+}
+### Admin create car
+POST http://localhost:9090/api/v1/addcar
+Content-Type: application/json
+
+{
+  "pricePerDay": 420.0,
+  "fabric": "gucci fabric",
+  "model": "Model T",
+  "registrationNumber": "007"
+}
+
+### Admin update customer
+PUT http://localhost:9090/api/v1/updatecustomer
+Content-Type: application/json
+
+{
+  "id":1,
+  "username": "kermit",
+  "name": "thefrog",
+  "address": "wehoooo",
+  "email": "kermit@mail.com",
+  "phoneNumber": "07070707070"
+}
+
+### Admin update car
+PUT http://localhost:9090/api/v1/updatecar
+Content-Type: application/json
+
+### admin delete customer
+DELETE  http://localhost:9090/api/v1/deletecustomer
+Content-Type: application/json
+
+### admin delete car
+DELETE  http://localhost:9090/api/v1/deletecar
+Content-Type: application/json
