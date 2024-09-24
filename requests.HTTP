@@ -7,6 +7,8 @@ GET http://localhost:9090/api/v1/customers
 ### admin get all cars
 GET http://localhost:9090/api/v1/allcars
 
+### CREATE CUSTOMER
+
 POST http://localhost:9090/api/v1/addcustomer
 Content-Type: application/json
 
