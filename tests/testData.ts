@@ -6,7 +6,7 @@ export const generateRandomCustomerPayload = () => {
         name: faker.person.fullName(),
         address:faker.location.streetAddress(),
         email:faker.internet.exampleEmail(),
-        phoneNumber:faker.phone.number(),
+        phoneNumber:faker.phone.number({ style: 'international' }),
     }
 }
 
@@ -16,6 +16,23 @@ export const generateRandomCarPayload = () => {
         fabric: faker.vehicle.color(),
         model: faker.vehicle.vehicle(),
         registrationNumber: faker.vehicle.vrm(),
+    }
+}
+
+export const generateupdatedCustomer = () => {
+    return {
+        id: 3,
+        username: faker.internet.userName(),
+        name: faker.person.fullName(),
+        address:faker.location.streetAddress(),
+        email:faker.internet.exampleEmail(),
+        phoneNumber:faker.phone.number({ style: 'international' }),
+    }
+}
+
+export const deleteCustomerById = () => {
+    return {
+        id: 1,
     }
 }
 
