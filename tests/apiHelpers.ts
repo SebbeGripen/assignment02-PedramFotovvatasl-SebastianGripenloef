@@ -75,8 +75,8 @@ export class APIHelper{
     }
        
 
-    async deleteCar(request: APIRequestContext){
-        const response = await request.delete(`${this.baseUrl}/api/v1/deletecar`);
+    async deleteCar(request: APIRequestContext, carId: number){
+        const response = await request.delete(`${this.baseUrl}/api/v1/deletecar/${carId}`);
         return response;
     }
 

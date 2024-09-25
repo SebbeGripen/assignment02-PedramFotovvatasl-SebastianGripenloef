@@ -47,21 +47,6 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  /*test('Test case 03 - Delete Post - v2', async ({ request }) => {
-    const getPosts = await apiHelper.getAllPosts(request);
-    expect(getPosts.ok()).toBeTruthy();
-    const allPosts = await getPosts.json();
-    const lastButOneID = allPosts[allPosts.length - 2].id;
-
-    //Delete request
-    const deleteRequest = await apiHelper.deletePost(request, lastButOneID);
-    expect(deleteRequest.ok()).toBeTruthy();
-
-    // GET by ID and verify status as 404
-    const getPostById = await apiHelper.getByID(request, lastButOneID);
-    expect(getPostById.status()).toBe(404);
-  });  */
-
   test('Test case 05 - Get all cars', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
@@ -127,4 +112,35 @@ test.describe('Test suite 1 backend', () => {
       ])
     )
   });
+
+  test('Test case 08 - Delete Cars', async ({ request }) => {
+    const getCars = await apiHelper.getAllCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
+    const allCars = await getCars.json();
+    const lastID = allCars[allCars.length - 1].id;
+
+    //Delete request
+    const deleteRequest = await apiHelper.deleteCar(request, lastID);
+    expect(deleteRequest.ok()).toBeTruthy();
+
+    // GET by ID and verify status as 404
+   /* const getPostById = await apiHelper.getByID(request, lastID);
+    expect(getPostById.status()).toBe(404);*/
+  });
+
+  /*test('Test case 03 - Delete Post - v2', async ({ request }) => {
+    const getPosts = await apiHelper.getAllPosts(request);
+    expect(getPosts.ok()).toBeTruthy();
+    const allPosts = await getPosts.json();
+    const lastButOneID = allPosts[allPosts.length - 2].id;
+
+    //Delete request
+    const deleteRequest = await apiHelper.deletePost(request, lastButOneID);
+    expect(deleteRequest.ok()).toBeTruthy();
+
+    // GET by ID and verify status as 404
+    const getPostById = await apiHelper.getByID(request, lastButOneID);
+    expect(getPostById.status()).toBe(404);
+  });*/
 })
