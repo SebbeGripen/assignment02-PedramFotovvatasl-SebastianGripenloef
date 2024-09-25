@@ -20,6 +20,9 @@ export class APIHelper{
 
     async updateCustomer(request: APIRequestContext, customerId: number, payload: object) {
         const response = await request.put(`${this.baseUrl}/api/v1/customers/${customerId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: JSON.stringify(payload),
         });
         return response;
@@ -27,6 +30,9 @@ export class APIHelper{
 
     async createCustomer(request: APIRequestContext, payload: object){
         const response = await request.post(`${this.baseUrl}/api/v1/addcustomer`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: JSON.stringify(payload),
         })
         return response;
@@ -42,22 +48,35 @@ export class APIHelper{
         return response;
     }
 
+    async getCarByID(request: APIRequestContext, carId: number) {
+        const response = await request.get(`${this.baseUrl}/api/v1/allcars/${carId}`);
+        return response;
+    }
+
     async createCar(request: APIRequestContext, payload: object){
         const response = await request.post(`${this.baseUrl}/api/v1/addcar`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: JSON.stringify(payload),
         })
         return response;
     }
 
-    async updateCar(request: APIRequestContext, carId: number, payload: object) {
-        const response = await request.put(`${this.baseUrl}/api/v1/customers/${carId}`, {
+
+    async updateCar(request: APIRequestContext, payload: object) {
+        const response = await request.put(`${this.baseUrl}/api/v1/updatecar`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: JSON.stringify(payload),
-        });
+        })
         return response;
     }
+       
 
-    async deleteCar(request: APIRequestContext, postId: number){
-        const response = await request.delete(`${this.baseUrl}/api/v1/deletecar/${postId}`);
+    async deleteCar(request: APIRequestContext){
+        const response = await request.delete(`${this.baseUrl}/api/v1/deletecar`);
         return response;
     }
 
@@ -77,6 +96,9 @@ export class APIHelper{
 
     async orderCar(request: APIRequestContext, payload: object){
         const response = await request.post(`${this.baseUrl}/api/v1/ordercar`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: JSON.stringify(payload),
         })
         return response;
@@ -84,6 +106,9 @@ export class APIHelper{
 
     async myOrders(request: APIRequestContext, payload: object){
         const response = await request.post(`${this.baseUrl}/api/v1/myorder`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: JSON.stringify(payload),
         })
         return response;
@@ -91,6 +116,9 @@ export class APIHelper{
 
     async cancelOrder(request: APIRequestContext, orderId: number, payload: object) {
         const response = await request.put(`${this.baseUrl}/api/v1/cancelorder/${orderId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: JSON.stringify(payload),
         });
         return response;

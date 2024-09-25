@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelpers';
-import { generateRandomCustomerPayload } from './testData';
+import { generateChangedCarPayload } from './testData';
 import { generateRandomCarPayload } from './testData';
 
 test.describe('Test suite 1 backend', () => {
@@ -19,14 +19,14 @@ test.describe('Test suite 1 backend', () => {
   test('Test case 02 - create random customer', async ({ request }) => {
     const payload = generateRandomCustomerPayload();
     const createCustomer = await apiHelper.createCustomer(request, payload);
-    //expect(createCustomer.ok()).toBeTruthy();
-    //expect(createCustomer.status()).toBe(200);
+    expect(createCustomer.ok()).toBeTruthy();
+    expect(createCustomer.status()).toBe(201);
 
     // verifying from the POST requestr
     expect(await createCustomer.json()).toMatchObject({
       username: payload.username,
       name: payload.name,
-      adress:payload.address,
+      adress:payload.adress,
       email:payload.email,
       phoneNumber:payload.phoneNumber,
     })
@@ -39,7 +39,7 @@ test.describe('Test suite 1 backend', () => {
         expect.objectContaining({
           username: payload.username,
           name: payload.name,
-          adress:payload.address,
+          adress:payload.adress,
           email:payload.email,
           phoneNumber:payload.phoneNumber,
         })
@@ -61,4 +61,70 @@ test.describe('Test suite 1 backend', () => {
     const getPostById = await apiHelper.getByID(request, lastButOneID);
     expect(getPostById.status()).toBe(404);
   });  */
+
+  test('Test case 05 - Get all cars', async ({ request }) => {
+    const getCars = await apiHelper.getAllCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
+  });
+
+  test('Test case 06 - create a random car', async ({ request }) => {
+    const payload = generateRandomCarPayload();
+    const createCar = await apiHelper.createCar(request, payload);
+    expect(createCar.ok()).toBeTruthy();
+    expect(createCar.status()).toBe(201);
+
+    // verifying from the POST request
+    expect(await createCar.json()).toMatchObject({
+      pricePerDay: payload.pricePerDay,
+      fabric: payload.fabric,
+      model:payload.model,
+      registrationNumber:payload.registrationNumber,
+    })
+
+    // verifying from GET request 
+    const getCars = await apiHelper.getAllCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    expect(await getCars.json()).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          pricePerDay: payload.pricePerDay,
+          fabric: payload.fabric,
+          model:payload.model,
+          registrationNumber:payload.registrationNumber,
+        })
+      ])
+    )
+  });
+
+  test('Test case 07 - change car', async ({ request }) => {
+    const payload = generateChangedCarPayload();
+    const changeCar = await apiHelper.updateCar(request, payload);
+    expect(changeCar.ok()).toBeTruthy();
+    expect(changeCar.status()).toBe(200);
+
+    // verifying from the PUT request
+    expect(await changeCar.json()).toMatchObject({
+      id: 2,
+      pricePerDay: payload.pricePerDay,
+      fabric: payload.fabric,
+      model:payload.model,
+      registrationNumber:payload.registrationNumber,
+    })
+
+    // verifying from GET request 
+    const getCars = await apiHelper.getAllCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    expect(await getCars.json()).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 2,
+          pricePerDay: payload.pricePerDay,
+          fabric: payload.fabric,
+          model:payload.model,
+          registrationNumber:payload.registrationNumber,
+        })
+      ])
+    )
+  });
 })
