@@ -19,12 +19,18 @@ export const generateRandomCarPayload = () => {
     }
 }
 
-export const generateChangedCarPayload = () => {
+export const generateChangedCarPayload = (carId) => {
     return {
-        id: 2,
+        id: carId,
         pricePerDay: faker.number.float({ min: 100, max: 1000, fractionDigits: 1, }),
         fabric: faker.vehicle.color(),
         model: faker.vehicle.vehicle(),
         registrationNumber: faker.vehicle.vrm(),
     }
+}
+
+export const deleteCarPayload = (carId) => {
+    return {
+        id: carId
+        }
 }

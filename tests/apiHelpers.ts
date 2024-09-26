@@ -75,10 +75,15 @@ export class APIHelper{
     }
        
 
-    async deleteCar(request: APIRequestContext, carId: number){
-        const response = await request.delete(`${this.baseUrl}/api/v1/deletecar/${carId}`);
-        return response;
-    }
+    async deleteCar(request: APIRequestContext, payload: object){
+        const response = await request.delete(`${this.baseUrl}/api/v1/deletecar`, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: JSON.stringify(payload),
+    })
+    return response;
+}
 
     // CRUD Orders
 

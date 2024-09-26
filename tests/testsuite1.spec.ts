@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelpers';
-import { generateChangedCarPayload } from './testData';
+import { generateRandomCustomerPayload, deleteCarPayload, generateChangedCarPayload } from './testData';
 import { generateRandomCarPayload } from './testData';
 
 test.describe('Test suite 1 backend', () => {
@@ -83,14 +83,14 @@ test.describe('Test suite 1 backend', () => {
   });
 
   test('Test case 07 - change car', async ({ request }) => {
-    const payload = generateChangedCarPayload();
+    const payload = generateChangedCarPayload(2);
     const changeCar = await apiHelper.updateCar(request, payload);
     expect(changeCar.ok()).toBeTruthy();
     expect(changeCar.status()).toBe(200);
 
     // verifying from the PUT request
     expect(await changeCar.json()).toMatchObject({
-      id: 2,
+      id: payload.id,
       pricePerDay: payload.pricePerDay,
       fabric: payload.fabric,
       model:payload.model,
@@ -103,7 +103,7 @@ test.describe('Test suite 1 backend', () => {
     expect(await getCars.json()).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 2,
+          id: payload.id,
           pricePerDay: payload.pricePerDay,
           fabric: payload.fabric,
           model:payload.model,
@@ -114,19 +114,13 @@ test.describe('Test suite 1 backend', () => {
   });
 
   test('Test case 08 - Delete Cars', async ({ request }) => {
-    const getCars = await apiHelper.getAllCars(request);
-    expect(getCars.ok()).toBeTruthy();
-    expect(getCars.status()).toBe(200);
-    const allCars = await getCars.json();
-    const lastID = allCars[allCars.length - 1].id;
-
-    //Delete request
-    const deleteRequest = await apiHelper.deleteCar(request, lastID);
-    expect(deleteRequest.ok()).toBeTruthy();
+    const payload = deleteCarPayload(2);
+    const deleteCar = await apiHelper.deleteCar(request,payload);
+    expect(deleteCar.ok()).toBeFalsy();
+    expect(deleteCar.status()).toBe(204)
 
     // GET by ID and verify status as 404
-   /* const getPostById = await apiHelper.getByID(request, lastID);
-    expect(getPostById.status()).toBe(404);*/
+   
   });
 
   /*test('Test case 03 - Delete Post - v2', async ({ request }) => {
