@@ -64,34 +64,17 @@ test.describe('Test suite 1 backend', () => {
     expect(getCustomers.status()).toBe(200);
   });
 
-  test('Test case 4 - Delete a customer by its ID and assert that the entry is actually gone.', async ({ request }) => {
-    const payload = deleteCustomerById(5);
-    const deleteCustomers = await apiHelper.deleteCustomer(request, payload);
-    expect(deleteCustomers.ok()).toBeTruthy();
-    expect(deleteCustomers.status()).toBe(204);
-
-    const getCustomers = await apiHelper.getAllCustomers(request);
-    expect (getCustomers.ok()).toBe(200)
-
-    //const deletedID = getCustomerById(1);
-    //expect(deletedID).not.toContain(deleteCustomerById)
-
-
-
-  });
-
-  /*test('Test case 04 - Delete Post - v2', async ({ request }) => {
-    const getPosts = await apiHelper.getAllPosts(request);
-    expect(getPosts.ok()).toBeTruthy();
-    const allPosts = await getPosts.json();
-    const lastButOneID = allPosts[allPosts.length - 2].id;
+  test('Test case 04 - Get all customers, and then delete the second to last ID and assert that the entry is gone. ', async ({ request }) => {
+    const getCustomers = await apiHelper.getAllCustomers(request,);
+    expect(getCustomers.ok()).toBeTruthy();
+    const allCustomers = await getCustomers.json();
+    const secondToLastID = allCustomers[allCustomers.length - 2].id; //allCustomers[0].id; to get first position from the top
+    const payload = {id: secondToLastID};
 
     //Delete request
-    const deleteRequest = await apiHelper.deletePost(request, lastButOneID);
+    const deleteRequest = await apiHelper.deleteCustomer(request, payload);
     expect(deleteRequest.ok()).toBeTruthy();
-
-    // GET by ID and verify status as 404
-    const getPostById = await apiHelper.getByID(request, lastButOneID);
-    expect(getPostById.status()).toBe(404);
-  });  */
+    const deleteRequest2 = await apiHelper.deleteCustomer(request, payload);
+    expect (deleteRequest2.status()).toBe(404);
+  });
 })
