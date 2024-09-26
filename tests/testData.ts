@@ -19,9 +19,9 @@ export const generateRandomCarPayload = () => {
     }
 }
 
-export const generateupdatedCustomer = () => {
+export const generateupdatedCustomer = (customerId) => {
     return {
-        id: 3,
+        id: customerId,
         username: faker.internet.userName(),
         name: faker.person.fullName(),
         address:faker.location.streetAddress(),
@@ -30,9 +30,15 @@ export const generateupdatedCustomer = () => {
     }
 }
 
-export const deleteCustomerById = () => {
+export const getCustomerById = (customerId) => {
     return {
-        id: 1,
+        id: customerId,
+    }
+}
+
+export const deleteCustomerById = (customerId) => {
+    return {
+        id: customerId,
     }
 }
 

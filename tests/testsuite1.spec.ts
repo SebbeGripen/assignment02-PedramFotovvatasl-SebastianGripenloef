@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelpers';
-import { generateRandomCustomerPayload, generateupdatedCustomer } from './testData';
+import { deleteCustomerById, generateRandomCustomerPayload, generateupdatedCustomer, getCustomerById } from './testData';
 import { generateRandomCarPayload } from './testData';
 
 test.describe('Test suite 1 backend', () => {
@@ -26,9 +26,9 @@ test.describe('Test suite 1 backend', () => {
     expect(await createCustomers.json()).toMatchObject({
       username: payload.username,
       name: payload.name,
-      address:payload.address,
-      email:payload.email,
-      phoneNumber:payload.phoneNumber,
+      address: payload.address,
+      email: payload.email,
+      phoneNumber: payload.phoneNumber,
     })
 
     // verifies the new user is now in the customer list when a GET request is made 
@@ -39,18 +39,18 @@ test.describe('Test suite 1 backend', () => {
         expect.objectContaining({
           username: payload.username,
           name: payload.name,
-          address:payload.address,
-          email:payload.email,
-          phoneNumber:payload.phoneNumber,
+          address: payload.address,
+          email: payload.email,
+          phoneNumber: payload.phoneNumber,
         })
       ])
     )
   });
 
-  test('Test case 03 - Update an existing customer and assert that the PUT request was successful and that the fields were updated.', async ({ request }) => {
+  test('Test case 03 - Update an existing customer by first finding its id, sending a payload, and then assert that the PUT request was successful and that the fields were updated. Finally, make a GET request to see all customers.', async ({ request }) => {
     //const customerID = 1;
-    const payload = generateupdatedCustomer();
-    const updateCustomers = await apiHelper.updateCustomer(request,payload);
+    const payload = generateupdatedCustomer(1);
+    const updateCustomers = await apiHelper.updateCustomer(request, payload);
     expect(updateCustomers.status()).toBe(200);
 
     const responseBody = await updateCustomers.json();
@@ -60,13 +60,24 @@ test.describe('Test suite 1 backend', () => {
     expect(responseBody.email).toBe(payload.email);
     expect(responseBody.phoneNumber).toBe(payload.phoneNumber);
 
-    expect(payload.username).toBeLessThanOrEqual(50);
+    const getCustomers = await apiHelper.getAllCustomers(request);
+    expect(getCustomers.status()).toBe(200);
   });
 
   test('Test case 4 - Delete a customer by its ID and assert that the entry is actually gone.', async ({ request }) => {
-    const deleteCustomers = await apiHelper.deleteCustomer(request);
-    //expect(deleteCustomers.ok()).toBeFalsy();
-    expect(deleteCustomers.status()).toBe(404);
+    const payload = deleteCustomerById(5);
+    const deleteCustomers = await apiHelper.deleteCustomer(request, payload);
+    expect(deleteCustomers.ok()).toBeTruthy();
+    expect(deleteCustomers.status()).toBe(204);
+
+    const getCustomers = await apiHelper.getAllCustomers(request);
+    expect (getCustomers.ok()).toBe(200)
+
+    //const deletedID = getCustomerById(1);
+    //expect(deletedID).not.toContain(deleteCustomerById)
+
+
+
   });
 
   /*test('Test case 04 - Delete Post - v2', async ({ request }) => {

@@ -13,9 +13,14 @@ export class APIHelper {
         return response;
     }
 
-    async getCustomerByID(request: APIRequestContext, customerId: number) {
-        const response = await request.get(`${this.baseUrl}/api/v1/customers`);
-        return response.json();
+    async getCustomerByID(request: APIRequestContext, payload:object) {
+        const response = await request.get(`${this.baseUrl}/api/v1/customers`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: JSON.stringify(payload),
+        })
+        return response;
     }
 
     async updateCustomer(request: APIRequestContext, payload: object) {
@@ -39,16 +44,17 @@ export class APIHelper {
         return response;
     }
 
-    async deleteCustomer(request: APIRequestContext) {
+    async deleteCustomer(request: APIRequestContext, payload: object) {
         const response = await request.delete(`${this.baseUrl}/api/v1/deletecustomer`, {
             headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
+                'Content-Type': 'application/json',
+            },
+
+            data: JSON.stringify(payload),
+        })
         return response;
     }
-    
+
 
     // CRUD CARS
     async getAllCars(request: APIRequestContext) {
