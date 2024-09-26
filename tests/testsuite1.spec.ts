@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelpers';
-import { generateRandomCustomerPayload, deleteCarPayload, generateChangedCarPayload } from './testData';
+import { generateRandomCustomerPayload, generateChangedCarPayload } from './testData';
 import { generateRandomCarPayload } from './testData';
 
 test.describe('Test suite 1 backend', () => {
@@ -26,9 +26,9 @@ test.describe('Test suite 1 backend', () => {
     expect(await createCustomer.json()).toMatchObject({
       username: payload.username,
       name: payload.name,
-      adress:payload.adress,
-      email:payload.email,
-      phoneNumber:payload.phoneNumber,
+      adress: payload.adress,
+      email: payload.email,
+      phoneNumber: payload.phoneNumber,
     })
 
     // verifying from GET request 
@@ -39,9 +39,9 @@ test.describe('Test suite 1 backend', () => {
         expect.objectContaining({
           username: payload.username,
           name: payload.name,
-          adress:payload.adress,
-          email:payload.email,
-          phoneNumber:payload.phoneNumber,
+          adress: payload.adress,
+          email: payload.email,
+          phoneNumber: payload.phoneNumber,
         })
       ])
     )
@@ -63,8 +63,8 @@ test.describe('Test suite 1 backend', () => {
     expect(await createCar.json()).toMatchObject({
       pricePerDay: payload.pricePerDay,
       fabric: payload.fabric,
-      model:payload.model,
-      registrationNumber:payload.registrationNumber,
+      model: payload.model,
+      registrationNumber: payload.registrationNumber,
     })
 
     // verifying from GET request 
@@ -75,15 +75,20 @@ test.describe('Test suite 1 backend', () => {
         expect.objectContaining({
           pricePerDay: payload.pricePerDay,
           fabric: payload.fabric,
-          model:payload.model,
-          registrationNumber:payload.registrationNumber,
+          model: payload.model,
+          registrationNumber: payload.registrationNumber,
         })
       ])
     )
   });
 
-  test('Test case 07 - change car', async ({ request }) => {
-    const payload = generateChangedCarPayload(2);
+  test('Test case 07 - update car', async ({ request }) => {
+    const getCars = await apiHelper.getAllCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    const allCars = await getCars.json();
+    const lastButOneID = allCars[0].id; // use for update car. just 0 for first position.
+    const payload = { id: lastButOneID };
+    const payload = generateRandomCarPayload();
     const changeCar = await apiHelper.updateCar(request, payload);
     expect(changeCar.ok()).toBeTruthy();
     expect(changeCar.status()).toBe(200);
@@ -93,8 +98,8 @@ test.describe('Test suite 1 backend', () => {
       id: payload.id,
       pricePerDay: payload.pricePerDay,
       fabric: payload.fabric,
-      model:payload.model,
-      registrationNumber:payload.registrationNumber,
+      model: payload.model,
+      registrationNumber: payload.registrationNumber,
     })
 
     // verifying from GET request 
@@ -106,35 +111,35 @@ test.describe('Test suite 1 backend', () => {
           id: payload.id,
           pricePerDay: payload.pricePerDay,
           fabric: payload.fabric,
-          model:payload.model,
-          registrationNumber:payload.registrationNumber,
+          model: payload.model,
+          registrationNumber: payload.registrationNumber,
         })
       ])
     )
   });
 
-  test('Test case 08 - Delete Cars', async ({ request }) => {
-    const payload = deleteCarPayload(2);
-    const deleteCar = await apiHelper.deleteCar(request,payload);
-    expect(deleteCar.ok()).toBeFalsy();
-    expect(deleteCar.status()).toBe(204)
-
-    // GET by ID and verify status as 404
-   
-  });
-
-  /*test('Test case 03 - Delete Post - v2', async ({ request }) => {
-    const getPosts = await apiHelper.getAllPosts(request);
-    expect(getPosts.ok()).toBeTruthy();
-    const allPosts = await getPosts.json();
-    const lastButOneID = allPosts[allPosts.length - 2].id;
+  test('Test case 08 - Delete car', async ({ request }) => {
+    const getCars = await apiHelper.getAllCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    const allCars = await getCars.json();
+    const lastButOneID = allCars[allCars.length - 2].id; // use for update car. just 0 for first position.
+    const payload = { id: lastButOneID };
 
     //Delete request
-    const deleteRequest = await apiHelper.deletePost(request, lastButOneID);
+    const deleteRequest = await apiHelper.deleteCar(request, payload);
     expect(deleteRequest.ok()).toBeTruthy();
+    const deleteRequestAgain = await apiHelper.deleteCar(request, payload);
+    expect(deleteRequestAgain.status()).toBe(404)
 
-    // GET by ID and verify status as 404
-    const getPostById = await apiHelper.getByID(request, lastButOneID);
-    expect(getPostById.status()).toBe(404);
-  });*/
+    const getCars2 = await apiHelper.getAllCars(request);
+    expect(getCars2.ok()).toBeTruthy();
+    const allCarsAfterDelete = await getCars2.json();
+    expect(allCarsAfterDelete).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: lastButOneID,
+        })
+      ])
+    );
+  });
 })

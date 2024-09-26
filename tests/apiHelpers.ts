@@ -1,9 +1,9 @@
 import { APIRequestContext } from "@playwright/test";
 
-export class APIHelper{
+export class APIHelper {
     private baseUrl: string;
 
-    constructor(baseUrl: string){
+    constructor(baseUrl: string) {
         this.baseUrl = baseUrl;
     }
 
@@ -28,7 +28,7 @@ export class APIHelper{
         return response;
     }
 
-    async createCustomer(request: APIRequestContext, payload: object){
+    async createCustomer(request: APIRequestContext, payload: object) {
         const response = await request.post(`${this.baseUrl}/api/v1/addcustomer`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -38,11 +38,11 @@ export class APIHelper{
         return response;
     }
 
-    async deleteCustomer(request: APIRequestContext, postId: number){
+    async deleteCustomer(request: APIRequestContext, postId: number) {
         const response = await request.delete(`${this.baseUrl}/api/v1/deletecustomer/${postId}`);
         return response;
     }
-// CRUD CARS
+    // CRUD CARS
     async getAllCars(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/api/v1/allcars`);
         return response;
@@ -53,7 +53,7 @@ export class APIHelper{
         return response;
     }
 
-    async createCar(request: APIRequestContext, payload: object){
+    async createCar(request: APIRequestContext, payload: object) {
         const response = await request.post(`${this.baseUrl}/api/v1/addcar`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -73,17 +73,18 @@ export class APIHelper{
         })
         return response;
     }
-       
 
-    async deleteCar(request: APIRequestContext, payload: object){
+
+    async deleteCar(request: APIRequestContext, payload: object) {
         const response = await request.delete(`${this.baseUrl}/api/v1/deletecar`, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        data: JSON.stringify(payload),
-    })
-    return response;
-}
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: JSON.stringify(payload),
+        })
+        return response;
+    }
+
 
     // CRUD Orders
 
@@ -99,7 +100,7 @@ export class APIHelper{
         return response;
     }
 
-    async orderCar(request: APIRequestContext, payload: object){
+    async orderCar(request: APIRequestContext, payload: object) {
         const response = await request.post(`${this.baseUrl}/api/v1/ordercar`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -109,7 +110,7 @@ export class APIHelper{
         return response;
     }
 
-    async myOrders(request: APIRequestContext, payload: object){
+    async myOrders(request: APIRequestContext, payload: object) {
         const response = await request.post(`${this.baseUrl}/api/v1/myorder`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -128,5 +129,5 @@ export class APIHelper{
         });
         return response;
 
-}
+    }
 }
