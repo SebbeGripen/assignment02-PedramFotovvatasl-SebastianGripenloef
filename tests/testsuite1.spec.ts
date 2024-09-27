@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelpers';
-import { generateRandomCustomerPayload, generateChangedCarPayload } from './testData';
+import { generateRandomCustomerPayload } from './testData';
 import { generateRandomCarPayload } from './testData';
 
 test.describe('Test suite 1 backend', () => {
@@ -47,13 +47,13 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  test('Test case 05 - Get all cars', async ({ request }) => {
+  test('Test case 06 - Get all cars', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
     expect(getCars.status()).toBe(200);
   });
 
-  test('Test case 06 - create a random car', async ({ request }) => {
+  test('Test case 07 - create a random car', async ({ request }) => {
     const payload = generateRandomCarPayload();
     const createCar = await apiHelper.createCar(request, payload);
     expect(createCar.ok()).toBeTruthy();
@@ -70,6 +70,7 @@ test.describe('Test suite 1 backend', () => {
     // verifying from GET request 
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
     expect(await getCars.json()).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -82,57 +83,67 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  test('Test case 07 - update car', async ({ request }) => {
+  test('Test case 08 - update car', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
     const allCars = await getCars.json();
-    const lastButOneID = allCars[0].id; // use for update car. just 0 for first position.
-    const payload = { id: lastButOneID };
+    const firstID = allCars[0].id;
     const payload = generateRandomCarPayload();
-    const changeCar = await apiHelper.updateCar(request, payload);
-    expect(changeCar.ok()).toBeTruthy();
-    expect(changeCar.status()).toBe(200);
+    const updatePayload = {
+      id: firstID,
+      ...payload
+    };
+    const updateCar = await apiHelper.updateCar(request, updatePayload);
+    expect(updateCar.ok()).toBeTruthy();
+    expect(updateCar.status()).toBe(200);
 
     // verifying from the PUT request
-    expect(await changeCar.json()).toMatchObject({
-      id: payload.id,
+    expect(await updateCar.json()).toMatchObject({
+      id: firstID,
       pricePerDay: payload.pricePerDay,
       fabric: payload.fabric,
       model: payload.model,
       registrationNumber: payload.registrationNumber,
+      isBooked: payload.isBooked,
     })
 
     // verifying from GET request 
-    const getCars = await apiHelper.getAllCars(request);
-    expect(getCars.ok()).toBeTruthy();
-    expect(await getCars.json()).toEqual(
+    const getCars2 = await apiHelper.getAllCars(request);
+    expect(getCars2.ok()).toBeTruthy();
+    expect(getCars2.status()).toBe(200);
+    expect(await getCars2.json()).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: payload.id,
+          id: firstID,
           pricePerDay: payload.pricePerDay,
           fabric: payload.fabric,
           model: payload.model,
           registrationNumber: payload.registrationNumber,
+          isBooked: payload.isBooked,
         })
       ])
     )
   });
 
-  test('Test case 08 - Delete car', async ({ request }) => {
+  test('Test case 09 - Delete car', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
     const allCars = await getCars.json();
-    const lastButOneID = allCars[allCars.length - 2].id; // use for update car. just 0 for first position.
+    const lastButOneID = allCars[allCars.length - 2].id;
     const payload = { id: lastButOneID };
 
     //Delete request
     const deleteRequest = await apiHelper.deleteCar(request, payload);
     expect(deleteRequest.ok()).toBeTruthy();
+    expect(deleteRequest.status()).toBe(200);
     const deleteRequestAgain = await apiHelper.deleteCar(request, payload);
     expect(deleteRequestAgain.status()).toBe(404)
 
     const getCars2 = await apiHelper.getAllCars(request);
     expect(getCars2.ok()).toBeTruthy();
+    expect(getCars2.status()).toBe(200);
     const allCarsAfterDelete = await getCars2.json();
     expect(allCarsAfterDelete).not.toEqual(
       expect.arrayContaining([

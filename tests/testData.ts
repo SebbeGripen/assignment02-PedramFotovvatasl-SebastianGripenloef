@@ -16,14 +16,6 @@ export const generateRandomCarPayload = () => {
         fabric: faker.vehicle.color(),
         model: faker.vehicle.vehicle(),
         registrationNumber: faker.vehicle.vrm(),
-    }
-}
-
-export const generateChangedCarPayload = () => {
-    return {
-        pricePerDay: faker.number.float({ min: 100, max: 1000, fractionDigits: 1, }),
-        fabric: faker.vehicle.color(),
-        model: faker.vehicle.vehicle(),
-        registrationNumber: faker.vehicle.vrm(),
+        isBooked: false,
     }
 }
