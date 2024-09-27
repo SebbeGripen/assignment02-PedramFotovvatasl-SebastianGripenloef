@@ -4,9 +4,9 @@ export const generateRandomCustomerPayload = () => {
     return {
         username: faker.internet.userName(),
         name: faker.person.fullName(),
-        adress: faker.location.streetAddress(),
+        address: faker.location.streetAddress(),
         email: faker.internet.exampleEmail(),
-        phoneNumber: faker.phone.number(),
+        phoneNumber: faker.phone.number({ style: 'international' }),
     }
 }
 
@@ -20,9 +20,10 @@ export const generateRandomCarPayload = () => {
     }
 }
 
-export const orderCar = () => {
+export const generateBooking = () => {
     return {
-        date: faker.date.future({ years: 1 }),
-        numberOfDays: faker.number.int({ min: 1, max: 30 }),
+        date: faker.date.between({ from: '2024-10-10T00:00:00.000Z', to: '2026-01-01T00:00:00.000Z' }),
+        numberOfDays: faker.number.int({ min: 3, max: 30 }),
+
     }
 }

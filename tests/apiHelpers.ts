@@ -13,23 +13,8 @@ export class APIHelper {
         return response;
     }
 
-    async getCustomerByID(request: APIRequestContext, customerId: number) {
-        const response = await request.get(`${this.baseUrl}/api/v1/customers/${customerId}`);
-        return response;
-    }
-
-    async updateCustomer(request: APIRequestContext, customerId: number, payload: object) {
-        const response = await request.put(`${this.baseUrl}/api/v1/customers/${customerId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: JSON.stringify(payload),
-        });
-        return response;
-    }
-
-    async createCustomer(request: APIRequestContext, payload: object) {
-        const response = await request.post(`${this.baseUrl}/api/v1/addcustomer`, {
+    async getCustomerByID(request: APIRequestContext, payload:object) {
+        const response = await request.get(`${this.baseUrl}/api/v1/customers`, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -38,18 +23,40 @@ export class APIHelper {
         return response;
     }
 
-    async deleteCustomer(request: APIRequestContext, postId: number) {
-        const response = await request.delete(`${this.baseUrl}/api/v1/deletecustomer/${postId}`);
+    async updateCustomer(request: APIRequestContext, payload: object) {
+        const response = await request.put(`${this.baseUrl}/api/v1/updatecustomer`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: JSON.stringify(payload),
+        })
+        return response;
+    }
+
+    async createCustomer(request: APIRequestContext, payload: object) {
+        const response = await request.post(`${this.baseUrl}/api/v1/addcustomer`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            data: JSON.stringify(payload),
+        })
+        return response;
+    }
+
+    async deleteCustomer(request: APIRequestContext, payload: object) {
+        const response = await request.delete(`${this.baseUrl}/api/v1/deletecustomer`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+            data: JSON.stringify(payload),
+        })
         return response;
     }
     // CRUD CARS
     async getAllCars(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/api/v1/allcars`);
-        return response;
-    }
-
-    async getCarByID(request: APIRequestContext, carId: number) {
-        const response = await request.get(`${this.baseUrl}/api/v1/allcars/${carId}`);
         return response;
     }
 
@@ -86,16 +93,13 @@ export class APIHelper {
     }
 
 
-    // CRUD Orders
+    //PUT,POST,GET, orders
 
     async getOrders(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/api/v1/orders`);
         
         return response;
     }
-
-
-    //PUT,POST,GET,DELETE CUSTOMERS
 
     async getCustomerCars(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/api/v1/cars`);
