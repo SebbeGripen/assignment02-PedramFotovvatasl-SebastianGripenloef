@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelpers';
-import { generateRandomCustomerPayload } from './testData';
+import { generateBooking, generateRandomCustomerPayload } from './testData';
 import { generateRandomCarPayload } from './testData';
 
 test.describe('Test suite 1 backend', () => {
@@ -104,33 +104,52 @@ test.describe('Test suite 1 backend', () => {
     expect(deleteRequest2.status()).toBe(404);
   });
 
-  test('Test case 05 - Get all orders and assert that the list is not empty', async ({ request }) => {
+  test('Test case 05 - Get all orders and assert status code 200.', async ({ request }) => {
     const getOrders = await apiHelper.getOrders(request);
     expect(getOrders.ok()).toBeTruthy();
     expect(getOrders.status()).toBe(200);
 
   });
 
-  test('Test case 06 - Get all orders and assert that the list is not empty', async ({ request }) => {
-    const allCars = await apiHelper.getAllCars(request);
-    expect(allCars.ok()).toBeTruthy();
-    expect(allCars.status()).toBe(200);
-
-  });
-
-  test('Test case 07 - Get all cars for admin', async ({ request }) => {
-    const getCars = await apiHelper.getAllCars(request);
-    expect(getCars.ok()).toBeTruthy();
-    expect(getCars.status()).toBe(200);
-  });
-
-  test('Test case 08 - Get cars for customer', async ({ request }) => {
+  test('Test case 06 - Get cars for customer and asserts status code,', async ({ request }) => {
     const getCars = await apiHelper.getCustomerCars(request);
     expect(getCars.ok()).toBeTruthy();
     expect(getCars.status()).toBe(200);
   });
 
-  test('Test case 09 - create a random car', async ({ request }) => {
+  test('Test case 07- Get all cars and customer, creates a booking. Asserts that correct status code is given, and that there is atleast 3 cars and customers.', async ({ request }) => {
+    const getCars = await apiHelper.getCustomerCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
+    const allCars = await getCars.json();
+    expect(allCars.length).toBeGreaterThan(2);
+    const thirdCarID = allCars[2].id;
+    const getCustomers = await apiHelper.getAllCustomers(request);
+    expect(getCustomers.ok()).toBeTruthy();
+    expect(getCustomers.status()).toBe(200);
+    const allCustomers = await getCustomers.json();
+    expect(allCustomers.length).toBeGreaterThan(2);
+    const thirdCustomerID = allCustomers[2].id;
+    const payload = generateBooking();
+    const updatedpayload ={
+      userId : thirdCustomerID,
+      carId : thirdCarID,
+      ...payload,
+    };
+    const ordercar = await apiHelper.orderCar(request, updatedpayload);
+    expect(ordercar.ok()).toBeTruthy();
+    expect(ordercar.status()).toBe(200);
+
+
+  });
+
+  test('Test case 08 - Get all cars for admin and asserts status code.', async ({ request }) => {
+    const getCars = await apiHelper.getAllCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
+  });
+
+  test('Test case 09 - creates a random car and asserts status code', async ({ request }) => {
     const payload = generateRandomCarPayload();
     const createCar = await apiHelper.createCar(request, payload);
     expect(createCar.ok()).toBeTruthy();
@@ -160,7 +179,7 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  test('Test case 10 - update car', async ({ request }) => {
+  test('Test case 10 - updates the first car and asserts status code', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
     expect(getCars.status()).toBe(200);
@@ -204,7 +223,7 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  test('Test case 11 - Delete car', async ({ request }) => {
+  test('Test case 11 - Deletes the 2nd to last car and asserts status', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
     expect(getCars.status()).toBe(200);
