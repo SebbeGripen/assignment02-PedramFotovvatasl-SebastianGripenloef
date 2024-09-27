@@ -90,12 +90,14 @@ export class APIHelper {
 
     async getOrders(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/api/v1/orders`);
+        
         return response;
     }
 
+
     //PUT,POST,GET,DELETE CUSTOMERS
 
-    async getCars(request: APIRequestContext) {
+    async getCustomerCars(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/api/v1/cars`);
         return response;
     }

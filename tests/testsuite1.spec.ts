@@ -22,7 +22,7 @@ test.describe('Test suite 1 backend', () => {
     expect(createCustomer.ok()).toBeTruthy();
     expect(createCustomer.status()).toBe(201);
 
-    // verifying from the POST requestr
+    // verifying from the POST request
     expect(await createCustomer.json()).toMatchObject({
       username: payload.username,
       name: payload.name,
@@ -47,13 +47,19 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  test('Test case 06 - Get all cars', async ({ request }) => {
+  test('Test case 06 - Get all cars for admin', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
     expect(getCars.status()).toBe(200);
   });
 
-  test('Test case 07 - create a random car', async ({ request }) => {
+  test('Test case 07 - Get cars for customer', async ({ request }) => {
+    const getCars = await apiHelper.getCustomerCars(request);
+    expect(getCars.ok()).toBeTruthy();
+    expect(getCars.status()).toBe(200);
+  });
+
+  test('Test case 08 - create a random car', async ({ request }) => {
     const payload = generateRandomCarPayload();
     const createCar = await apiHelper.createCar(request, payload);
     expect(createCar.ok()).toBeTruthy();
@@ -83,11 +89,12 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  test('Test case 08 - update car', async ({ request }) => {
+  test('Test case 09 - update car', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
     expect(getCars.status()).toBe(200);
     const allCars = await getCars.json();
+    expect(allCars.length).toBeGreaterThan(0);
     const firstID = allCars[0].id;
     const payload = generateRandomCarPayload();
     const updatePayload = {
@@ -126,11 +133,12 @@ test.describe('Test suite 1 backend', () => {
     )
   });
 
-  test('Test case 09 - Delete car', async ({ request }) => {
+  test('Test case 10 - Delete car', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
     expect(getCars.status()).toBe(200);
     const allCars = await getCars.json();
+    expect(allCars.length).toBeGreaterThan(0);
     const lastButOneID = allCars[allCars.length - 2].id;
     const payload = { id: lastButOneID };
 

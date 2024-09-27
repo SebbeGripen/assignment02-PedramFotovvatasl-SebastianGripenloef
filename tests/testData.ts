@@ -19,3 +19,10 @@ export const generateRandomCarPayload = () => {
         isBooked: false,
     }
 }
+
+export const orderCar = () => {
+    return {
+        date: faker.date.future({ years: 1 }),
+        numberOfDays: faker.number.int({ min: 1, max: 30 }),
+    }
+}
