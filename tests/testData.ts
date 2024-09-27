@@ -19,9 +19,8 @@ export const generateRandomCarPayload = () => {
     }
 }
 
-export const generateupdatedCustomer = (customerId) => {
+export const generateupdatedCustomer = () => {
     return {
-        id: customerId,
         username: faker.internet.userName(),
         name: faker.person.fullName(),
         address:faker.location.streetAddress(),
