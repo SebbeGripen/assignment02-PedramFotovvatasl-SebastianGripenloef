@@ -4,9 +4,9 @@ export const generateRandomCustomerPayload = () => {
     return {
         username: faker.internet.userName(),
         name: faker.person.fullName(),
-        address:faker.location.streetAddress(),
-        email:faker.internet.exampleEmail(),
-        phoneNumber:faker.phone.number({ style: 'international' }),
+        address: faker.location.streetAddress(),
+        email: faker.internet.exampleEmail(),
+        phoneNumber: faker.phone.number({ style: 'international' }),
     }
 }
 
@@ -23,21 +23,18 @@ export const generateupdatedCustomer = () => {
     return {
         username: faker.internet.userName(),
         name: faker.person.fullName(),
-        address:faker.location.streetAddress(),
-        email:faker.internet.exampleEmail(),
-        phoneNumber:faker.phone.number({ style: 'international' }),
+        address: faker.location.streetAddress(),
+        email: faker.internet.exampleEmail(),
+        phoneNumber: faker.phone.number({ style: 'international' }),
     }
 }
 
-export const getCustomerById = (customerId) => {
+export const generateBooking = () => {
     return {
-        id: customerId,
+        date: faker.date.between({ from: '2024-10-10T00:00:00.000Z', to: '2026-01-01T00:00:00.000Z' }),
+        numberOfDays: faker.number.int({ min: 3, max: 30 }),
+
     }
 }
 
-export const deleteCustomerById = (customerId) => {
-    return {
-        id: customerId,
-    }
-}
 

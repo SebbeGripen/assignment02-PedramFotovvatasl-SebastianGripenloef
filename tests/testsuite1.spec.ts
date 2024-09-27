@@ -1,13 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { APIHelper } from './apiHelpers';
-import { deleteCustomerById, generateRandomCustomerPayload, generateupdatedCustomer, getCustomerById } from './testData';
-import { generateRandomCarPayload } from './testData';
+import { generateRandomCustomerPayload, generateupdatedCustomer, } from './testData';
 
 test.describe('Test suite 1 backend', () => {
   let apiHelper: APIHelper;
 
   test.beforeAll(() => {
-    apiHelper = new APIHelper(`${process.env.BASE_URL}`); //if this doenst work replace with only BASE_URL
+    apiHelper = new APIHelper(`${process.env.BASE_URL}`);
   })
 
   test('Test case 01 - Get all customers and assert that the response is 200', async ({ request }) => {
@@ -93,7 +92,8 @@ test.describe('Test suite 1 backend', () => {
     const getCustomers = await apiHelper.getAllCustomers(request,);
     expect(getCustomers.ok()).toBeTruthy();
     const allCustomers = await getCustomers.json();
-    const secondToLastID = allCustomers[allCustomers.length - 2].id; //allCustomers[0].id; to get first position from the top
+    expect(allCustomers.length).toBeGreaterThan(2); // Assert that the customer list has at least two entries so that the deletion can be made.
+    const secondToLastID = allCustomers[allCustomers.length - 2].id;
     const payload = { id: secondToLastID };
 
     //Delete request
@@ -102,4 +102,20 @@ test.describe('Test suite 1 backend', () => {
     const deleteRequest2 = await apiHelper.deleteCustomer(request, payload);
     expect(deleteRequest2.status()).toBe(404);
   });
+
+  test('Test case 05 - Get all orders and assert that the list is not empty', async ({ request }) => {
+    const getOrders = await apiHelper.getOrders(request);
+    expect(getOrders.ok()).toBeTruthy();
+    expect(getOrders.status()).toBe(200);
+    
+  });
+
+  test('Test case 06 - Get all orders and assert that the list is not empty', async ({ request }) => {
+    const allCars = await apiHelper.getAllCars(request);
+    expect(allCars.ok()).toBeTruthy();
+    expect(allCars.status()).toBe(200);
+    
+  });
+
+
 })

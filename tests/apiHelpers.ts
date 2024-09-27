@@ -81,29 +81,15 @@ export class APIHelper {
         return response;
     }
 
-    // CRUD Orders
+    //PUT,POST,GET orders
 
     async getOrders(request: APIRequestContext) {
         const response = await request.get(`${this.baseUrl}/api/v1/orders`);
         return response;
     }
 
-    //PUT,POST,GET,DELETE CUSTOMERS
-
-    async getCars(request: APIRequestContext) {
-        const response = await request.get(`${this.baseUrl}/api/v1/cars`);
-        return response;
-    }
-
-    async orderCar(request: APIRequestContext, payload: object) {
-        const response = await request.post(`${this.baseUrl}/api/v1/ordercar`, {
-            data: JSON.stringify(payload),
-        })
-        return response;
-    }
-
     async myOrders(request: APIRequestContext, payload: object) {
-        const response = await request.post(`${this.baseUrl}/api/v1/myorder`, {
+        const response = await request.post(`${this.baseUrl}/api/v1/myorders`, {
             data: JSON.stringify(payload),
         })
         return response;
@@ -111,6 +97,14 @@ export class APIHelper {
 
     async cancelOrder(request: APIRequestContext, orderId: number, payload: object) {
         const response = await request.put(`${this.baseUrl}/api/v1/cancelorder/${orderId}`, {
+            data: JSON.stringify(payload),
+        });
+        return response;
+
+    }
+
+    async orderCar(request: APIRequestContext, payload: object) {
+        const response = await request.put(`${this.baseUrl}/api/v1/ordercar`, {
             data: JSON.stringify(payload),
         });
         return response;
