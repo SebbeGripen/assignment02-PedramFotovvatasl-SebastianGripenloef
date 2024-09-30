@@ -7,7 +7,7 @@ test.describe('Test suite 1 backend', () => {
   let apiHelper: APIHelper;
 
   test.beforeAll(() => {
-    apiHelper = new APIHelper(`${process.env.BASE_URL}`); //if this doenst work replace with only BASE_URL
+    apiHelper = new APIHelper(`${process.env.BASE_URL}`);
   })
 
   test('Test case 01 - Get all customers and assert that the response is 200', async ({ request }) => {
@@ -111,9 +111,10 @@ test.describe('Test suite 1 backend', () => {
 
   });
 
-  test('Test case 06 - Get cars for customer and asserts status code,', async ({ request }) => {
+  test('Test case 06 - Get cars for customer, makes sure the response is in JSON, and asserts status code,', async ({ request }) => {
     const getCars = await apiHelper.getCustomerCars(request);
     expect(getCars.ok()).toBeTruthy();
+    expect(getCars.headers()['content-type']).toContain('application/json');
     expect(getCars.status()).toBe(200);
   });
 
@@ -131,9 +132,9 @@ test.describe('Test suite 1 backend', () => {
     expect(allCustomers.length).toBeGreaterThan(2);
     const thirdCustomerID = allCustomers[2].id;
     const payload = generateBooking();
-    const updatedpayload ={
-      userId : thirdCustomerID,
-      carId : thirdCarID,
+    const updatedpayload = {
+      userId: thirdCustomerID,
+      carId: thirdCarID,
       ...payload,
     };
     const ordercar = await apiHelper.orderCar(request, updatedpayload);
@@ -143,9 +144,11 @@ test.describe('Test suite 1 backend', () => {
 
   });
 
-  test('Test case 08 - Get all cars for admin and asserts status code.', async ({ request }) => {
+  test('Test case 08 - Get all cars for admin, asserting that the data comes in an array and asserts status code.', async ({ request }) => {
     const getCars = await apiHelper.getAllCars(request);
     expect(getCars.ok()).toBeTruthy();
+    const allcars = await getCars.json();
+    expect(allcars).toBeInstanceOf(Array);
     expect(getCars.status()).toBe(200);
   });
 
